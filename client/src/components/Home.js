@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import withAuthorization from './withAuthorization';
-import { db } from '../firebase';
+import { db,auth } from '../firebase';
 import {upload} from '../helpers/upload';
 
 class HomePage extends Component {
@@ -9,6 +9,7 @@ class HomePage extends Component {
     super(props);
 
     this.state = {
+      currentUser: null,
       users: null,
       form :{
         files: [],
@@ -34,12 +35,19 @@ class HomePage extends Component {
   _onSubmit = (event) => {
    event.preventDefault();
    let data = this.state.form;
-   upload(data);
+   let owner = auth.getUserData()['uid'];
+   upload(data,owner);
+   console.log(data);
+   db.addFile(owner,data["files"][0].name);
 
   }
   componentDidMount() {
+    
     db.onceGetUsers().then(snapshot =>
-      this.setState(() => ({ users: snapshot.val() }))
+      this.setState(() => ({ 
+        user: auth.currentUser,
+        users: snapshot.val()
+       }))
     );
   }
 
@@ -47,7 +55,7 @@ class HomePage extends Component {
     const { users } = this.state;
     return (
       <div>
-        <h1>Home</h1>
+        <h1>Upload Files</h1>
         <form onSubmit={this._onSubmit}>
         <label htmlFor={'input-file'}>
             <input onChange={this._onFileAdded} id={'input-file'} type="file" multiple={true}/>
@@ -67,7 +75,7 @@ const UserList = ({ users }) =>
   <h2>List of Usernames of User</h2>
 
   {Object.keys(users).map(key =>
-    <div key={key}>{users[key].username}</div>
+    <div key={key}>{users[key].email}</div>
   )}
 </div>
 

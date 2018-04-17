@@ -1,17 +1,18 @@
 import { apiUrl } from "../constants/config";
 import axios from 'axios'
-export const upload = (form, callback = () => { }) => {
+export const upload = (form, owner, callback = () => { }) => {
 
 
     const url = `${apiUrl}/upload`;
 
     let files = form["files"];
-    console.log(files, url);
+    console.log(files, url, owner);
     let data = new FormData();
-    for(let file of files) {
+    for (let file of files) {
         data.append('files', file);
     }
     console.log(data.get("files"));
+    data.append("owner", owner);
 
     const config = {
         onUploadProgress: (event) => {
@@ -20,68 +21,28 @@ export const upload = (form, callback = () => { }) => {
                 type: 'onUploadProgress',
                 payload: event,
             })
+        },
+        headers:{
+            owner:owner
         }
     }
 
     axios.post(url, data, config).then((response) => {
-        
-        
-                // upload successful.
-        
-                return callback({
-                    type: 'success',
-                    payload: response.data
-                })
-        
-            }).catch((err) => {
-        
-                return callback({
-                    type: 'error',
-                    payload: err
-                })
-            });
-    // let data = new FormData();
-
-    // _.each(files, (file) => {
-    //     data.append('files', file);
-    // });
-
-    // data.append('to', _.get(form, 'to'));
-    // data.append('from', _.get(form, 'from'));
-    // data.append('message', _.get(form, 'message'));
 
 
+        // upload successful.
 
-    // const config = {
+        return callback({
+            type: 'success',
+            payload: response.data
+        })
 
-    //     onUploadProgress: (event) => {
+    }).catch((err) => {
 
-    //         console.log("Upload event", event);
-
-    //         return callback({
-    //             type: 'onUploadProgress',
-    //             payload: event,
-    //         })
-    //     }
-    // }
-
-    // axios.post(url, data, config).then((response) => {
-
-
-    //     // upload successful.
-
-    //     return callback({
-
-    //         type: 'success',
-    //         payload: response.data
-    //     })
-
-    // }).catch((err) => {
-
-    //     return callback({
-    //         type: 'error',
-    //         payload: err
-    //     })
-    // });
+        return callback({
+            type: 'error',
+            payload: err
+        })
+    });
 
 };
