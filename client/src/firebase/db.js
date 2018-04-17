@@ -14,9 +14,31 @@ export const onceGetUsers = () =>
 export const getUserFiles = (owner) =>
   db.ref(`files/${owner}`).once('value');
 
+export const getUserSharedFiles =  async (owner) =>{
+  let sharedRef = null;
+  let fileMapping = {};
+  await db.ref(`share/${owner}`).once('value').then(snapshot =>{
+ 
+    sharedRef=snapshot.val();
+    Object.keys(sharedRef).forEach(function(key){
+      db.ref(`files/${sharedRef[key]["fromUser"]}`).once('value').then(fileSnapshot => {
+        let refFiles = fileSnapshot.val();
+        fileMapping[key] = refFiles[key]
+        debugger;
+        // console.log(fileMapping);
+        // return fileMapping
+      });
+    })
+
+  }).then(()=>{
+    
+  });
+  return fileMapping;
+}
+
 export const addFile = (owner, filename) => {
   getUserFiles(owner).then(snapshot => {
-    console.log(snapshot.val());
+    
     
   });
 
