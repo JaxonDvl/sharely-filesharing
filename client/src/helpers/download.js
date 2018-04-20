@@ -1,10 +1,10 @@
 import axios from 'axios'
-import { apiUrl } from "../constants/config";
+import { getApiUrl } from "../constants/config";
 
 
-export const getDownloadInfo = (id,userId) => {
+export const getDownloadInfo = async(id,userId) => {
 
-    const url = `${apiUrl}/download/${userId}/${id}`;
+    const url = `${getApiUrl()}/download/${userId}/${id}`;
     console.log(url);
 
     return window.open(url);

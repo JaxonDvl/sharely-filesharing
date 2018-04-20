@@ -6,6 +6,8 @@ import { upload } from '../helpers/upload';
 import { getDownloadInfo } from '../helpers/download';
 import "./MyFiles.css";
 
+import { getApiUrl } from "../constants/config";
+
 class Myfiles extends Component {
   constructor(props) {
     super(props);
@@ -67,7 +69,8 @@ function downloadFile(event) {
   let ownerFile = event.target.getAttribute("data-user");
   let downloadUrl = getDownloadInfo(event.target.id, ownerFile);
 
-}
+};
+
 
 
 const FileList = ({ files, user }) =>

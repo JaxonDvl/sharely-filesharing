@@ -1,9 +1,9 @@
-import { apiUrl } from "../constants/config";
+import { getApiUrl } from "../constants/config";
 import axios from 'axios'
-export const upload = (form, owner, callback = () => { }) => {
+export const upload = async(form, owner,murl, callback = () => { }) => {
 
 
-    const url = `${apiUrl}/upload`;
+    const url = `${murl}/upload`;
 
     let files = form["files"];
     console.log(files, url, owner);

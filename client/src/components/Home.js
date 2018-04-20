@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import withAuthorization from './withAuthorization';
 import { db,auth } from '../firebase';
 import {upload} from '../helpers/upload';
-
+import { londonUrl,frankfurtUrl } from "../constants/config";
 class HomePage extends Component {
   constructor(props) {
     super(props);
@@ -36,7 +36,8 @@ class HomePage extends Component {
    event.preventDefault();
    let data = this.state.form;
    let owner = auth.getUserData()['uid'];
-   upload(data,owner);
+   upload(data,owner,londonUrl);
+   upload(data,owner,frankfurtUrl);
    console.log(data);
    db.addFile(owner,data["files"][0].name);
 
